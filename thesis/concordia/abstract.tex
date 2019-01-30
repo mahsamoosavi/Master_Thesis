@@ -1,0 +1,19 @@
+% !TEX root = ../main.tex
+
+\vspace*{1cm}
+\begin{center}
+{\bf ABSTRACT}
+\end{center}
+\begin{center}
+{\bf Rethinking Certificate Authorities: \\Understanding and decentralizing domain validation}
+\end{center}
+\vspace*{0.2in}
+\begin{center}
+Seyedehmahsa Moosavi
+\end{center}
+
+HTTPS (HTTP over TLS) protocol provides message integrity, confidentiality, and server authentication. Server authentication relies on the client's ability to obtain a correct public key which is bound to the server. To provide this, the Public Key Infrastructure (PKI) uses a system of trusted third parties (TTPs) called the certificate authorities (CAs). CAs are the companies who receive certificate requests for domain names, they then use validation techniques to verify the ownership of those domains and once verified, they issue the digital certificates. These digital certificates are the electronic documents which simply bind domain names to the cryptographic keys and can be further used to secure communication channels over the web. However, PKI's several drawbacks enabled the malicious parties to break the entire CA model and issue themselves fraudulent certificates for domain names.
+
+There has been little quantitative analysis of the certificate authorities (CAs) and how they establish domain names validation, so we first perform a thorough empirical study on the CA ecosystem and evaluate the security issues with the domain verification techniques. We find out that a central problem with the certificate model is that CAs resort to \textit{indirection} to issue certificates because they are not directly authoritative over who owns what domain. Therefore, we design and implement a new and useful paradigm for thinking about who is actually authoritative over PKI information in the web certificate model. We then consider what smart contracts could add to the web certificate model, if we move beyond using a blockchain as passive, immutable (subject to consensus) store of data. To illustrate the potential, we develop and experiment with an Ethereum-based web certificate model we call \Ghazalstar, discuss different design decisions, and analyze deployment costs.
+
+

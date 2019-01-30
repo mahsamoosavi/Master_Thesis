@@ -1,0 +1,61 @@
+\documentclass[12pt]{report}
+% = = Margins
+\textwidth 15.2cm %6.0in  %468pt
+\textheight 22.0cm %9.0in  %648pt
+\headheight = 0.0cm
+\headsep = 0.0cm
+\topmargin = 0.0cm
+\footskip = 1.0cm
+\baselineskip=4ex
+
+% = = Packages
+
+\input{setup/packages}
+\input{setup/macros}
+\input{setup/table}
+\input{setup/alg}
+
+
+
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+
+
+\begin{document}
+
+\input{concordia/title}
+
+\doublespace
+\include{concordia/abstract}
+\include{concordia/ack}
+
+\tableofcontents
+\listoffigures \addcontentsline{toc}{chapter}{\listfigurename}
+
+% JC: Read Chapter 4.1 - in-person
+% JC: Read Chapter 2 - offline and give comments
+% JC: Read Chapter 5.1 & 5.2 & 5.3 -  offline and give comments
+% JC: Read Chapter 1 & 6
+
+
+\input{chap1}
+\input{chap2}
+\input{chap3}
+\input{chap4}
+\input{chap5}
+\input{chap6}
+
+
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliography{ref}             %place your .bib files here
+\bibliographystyle{ieeetr}                   %the bibliography style to use
+
+\appendix
+\include {appendix}
+
+
+
+
+\end{document}

@@ -1,0 +1,65 @@
+% !TEX root = main.tex
+
+\chapter{Introductory Remarks}
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+In the recent years, the Internet has gained a significant ground on facilitating world-wide communications. Unlike the past when Internet was only used as a medium for sharing files, it is now the principle of everyone's life. Communications take place over the web using unlimited number of electronic devices. Thus, individuals need to be able to authenticate the digital identities of remote parties to establish secure web communication channels. These digital identities are managed by a group of third parties such as Certificate Authorities (CAs), ICANN, and DNS. However, placing too much trust on these authorities has led to single point of failures in the entire web. 
+ 
+Given the centralized design of the web entities (\ie DNS, ICANN, CAs), studies have considered blockchain-approaches to manage digital identities in a decentralized manner (using a consensus mechanism) to roughly eliminate the role of trusted third parties in providing secure and authenticated transmissions of data over the web. 
+
+In this thesis, we would like to look at the public key infrastructure (PKI) and certificate authorities (CAs) who manage digital identities on the web. We particularly investigate the identity validation methods applied by the real-world CAs. We also reevaluate the concept of \emph{authority} --- what does it mean to be authoritative over something?, and introduce the \UA paradigm. Eventually, we represent our system \Ghazalstar, a smart contract-based naming and PKI \UA system which is implemented and tested on the Ethereum blockchain.
+
+\section{Background}
+
+The HTTPS (HTTP over SSL/TLS) protocol enables secure connections to websites with confidentiality, message integrity, and server authentication. Server authentication relies on a client being able to determine the correct public key for a server. HTTPS protocol uses the public key infrastructure (PKI) which refers to a set of methods which enables the creation, distribution, usage of public key certificates for a network of users. Certificate authorities (CAs) are the main components of PKI that provide the \emph {(identity, public key)} binding in the form of a certificate. Client devices, through the browser and/or the operating system, are pre-installed with a set of known CAs who can delegate their authority to intermediary CAs through a protocol involving certificates. When a CA issues a certificate to a web-server, there are generally three types: domain validated (DV) certificates bind a public key only to a domain (\eg \texttt{example.com}), while organization validated (OV) and extended validated (EV) certificates validate additional information about the organization that operates the server (Example, Inc.). By issuing certificates, CAs (as trusted third parties) certify that specific public key belongs to a certain subject who owns the corresponding private key. Thus, when a client visits a website, he can verify the server's public key based on his or her identity \cite{ellison1999nature, perlman1999overview,housley2002internet,wenbo2004modern,adams2003understanding,vacca2004public}.
+
+The current web certificate design has led the security of the web to depend on anchoring trust in CAs --- the trust appears once CAs assure the security of their private signing key. Despite CA's solid effort and operation, there have been quite a few incidents in which a CA's private keys were compromised as a result of social engineering attacks, governmental obligation, functional mistakes \etc As an example, in 2011, Comodo\cite{eckersley2010observatory,ComodoRe52:online} and DigiNotar \cite{kaminskypki}, two of the most significant CAs on the web, have been compromised. Other failure occurred in other certificate authorities such as Turkish and French CAs who issued unauthorized certificates for several Google domains in 2013 \cite{GoogleOn40:online,GoogleOn64:online}. In some cases, failures and misbehaviours of certificate authorities resulted in several attacks such as \emph{man in the middle (MITM)} attacks against popular domains. For instance, attackers were successfully able to issue a fraudulent digital certificate for extremely high-value domains including \texttt{google.com} and \texttt{login.yahoo.com} and simply intercepted communications with these well-known sites \cite{GoogleYa98:online}. Compromise of CAs private keys introduces single point-of-failures in the entire PKI and results in large number of security violations on the web. 
+
+Therefore, one application of blockchain technology that has received some research and commercial interest is the idea of replacing (or augmenting) the web certificate model used by clients (OS and browsers) to form secure communication channels with web-servers. This model has been plagued with issues from fraudulent certificates used to impersonate servers to ineffective revocation mechanisms; see Clark and van Oorschot for a survey~\cite{CO13}. 
+
+Namecoin is an altcoin (software based on Bitcoin with a distinct blockchain) that implements a decentralized namespace for domain names\cite{Kalodner2015empirical}. The main feature of Namecoin is that for a fee, users can register a \texttt{.bit} address and map it to an IP address of their choice.  CertCoin \cite{fromknecht2014certcoin}, and PB-PKI \cite{axon2016pb} are extensions to Namecoin that add the ability to specify an HTTPS public key certificate for the domain (as well as other PKI operations like expiration and revocation, which we discuss in Section~\ref{sec:revocation}). Blockstack \cite{ali2016blockstack} achieves the same goal by embedding data into a root blockchain, a process called virtualchains that could be instantiated with \texttt{OP\_RETURN} on Bitcoin's blockchain. 
+
+Some research has looked at adding transparency, effectively through an efficient log of CA-issued certificates, to augment the current web certificate model. This is a very active area of research that includes certificate transparency (CT) \cite{laurie2014certificate}, sovereign keys (SKs) \cite{giteffor4:online}, and ARPKI \cite{basin2014arpki}. IKP \cite{matsumoto2016ikp} provides an Ethereum-based system for servers to advertise policies about their certificates (akin to a more verbose CAA on a blockchain instead via DNS). Research a bit further removed from web certificates concerns decentralized PKIs and broader identities. While not decentralized, CONIKS provides a distributed transparency log similar to CT but for public keys (while they could be for anything, email and IM are the primary motivations) \cite{melara2015coniks}. Bonneau provides an Ethereum smart contract for monitoring CONIKS \cite{bonneau2016ethiks}. ClaimChain is similar to CONIKS but finds a middle-ground between a small set of distributed servers (CONIKS) and a fully decentralized but global state (blockchain) by having fully decentralized, local states that can be cross-validated \cite{kulynych2017claimchain}. CONIKS and ClaimChain do not use CAs but rather rely on users validating the logs, which are carefully designed to be non-equivocating. ChainAnchor provides identity and access management for private blockchains \cite{hardjonoverifiable}, while CoSi is a distributed signing authority generic logging \cite{syta2016keeping}. Each of these systems is concerned with logging data (a generic umbrella that encapsulates many of these is Transparency Overlays \cite{chase2016transparency}). 
+
+Finally, some research has explored having public validated by external parties but replacing the role of CAs with a PGP-style web of trust. SCPKI is an implementation of this idea on Ethereum \cite{al2017scpki}. Our observation is that for domain validation, a blockchain with a built-in naming system is already authoritative over the namespace and does not require additional validation. 
+
+\section{Contributions}
+
+The primary contributions of our work are as follows:
+
+\begin{itemize}
+\item \textbf{Empirical study of certificate validation methods.} We perform a thorough empirical study of certificate authorities and the validation techniques they employ. We develop a full enumeration of all uniquely identified trusted CAs in the real world.  In total, we make an in-depth investigation of ${\sim}$700 certificate authorities and provide an overview of the validation methods they rely on to issue certificates.   
+
+\item \textbf{Rethinking authorities in the PKI.} Given the fundamental issues with the current web certificate model, we reevaluate the concept of \emph{authority} --- what does it mean to be authoritative over something? We claim that certificate authorities are not any more or less authoritative over who owns what domain than you or I.
+
+\item \textbf{Decentralized PKI for the web.} We design and implement  \Ghazalstar, a smart contract-based naming and PKI \UA system. This system is built and tested on the Ethereum blockchain. 
+
+\end{itemize}
+
+
+\section{Organization}
+
+The rest of the document is organized in the following way:
+\begin{itemize}
+
+ \item In Chapter 2, we provide an overview of the background information about cryptography, public key certificates along with its components, Blockchain technology, and Ethereum blockchain.
+ 
+ \item  In Chapter 3, we provide an empirical study of the certificate authorities and the identity validation methods they use to issue certificates. We then pinpoint the fundamental issues with the current web certificate model. 
+ 
+ \item  In Chapter 4, we provide the detailed introduction of our proposed system \Ghazalstar along with its design decisions and functions.
+
+\item In Chapter 5, we provide in-depth real-world implementation and evaluation details of our system \Ghazalstar. 
+
+\item In Chapter 6, we provide conclusion and a brief discussion for this dissertation.
+
+
+
+\end{itemize}
+
+
+
+
+
+

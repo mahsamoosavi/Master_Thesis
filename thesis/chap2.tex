@@ -1,0 +1,74 @@
+% !TEX root = main.tex
+
+\chapter{Preliminaries and Related Work}
+
+This chapter is divided into four main sections, each of which provides a brief overview of the main concepts that a reader without sufficient background needs before reading the thesis.
+
+\section{Cryptography}
+
+Cryptography is the application of techniques used to provide secure communication channels where message confidentiality and integrity are assured. This section discusses a few basic concepts in cryptography.
+
+\subsection{Public Key Encryption}
+
+Public key cryptography is an encryption scheme \cite{diffie1976new} where each user owns a pair of keys: (1) a public key $Pk$, which is known to everybody and (2) a private key $Sk$, which is a secret key. Any user can encrypt a plain-text message $P$ using the recipient's public key $Pk$, and the cipher-text message $C$ can only be decrypted using the corresponding private key. This encryption technique uses a cryptographic algorithm $A_e$ for encryption and $A_d$ for decryption. Equations \ref{eq:PKencryption} and \ref{eq:PKdecryption} represents the encryption and decryption in public key encryption scheme.
+\begin{equation} \label{eq:PKencryption}
+ C = A_{e,Pk}(M) 
+\end{equation}
+\begin{equation} \label{eq:PKdecryption}
+ M = A_{d,Sk}(C) 
+\end{equation}
+ 
+
+\subsection{Digital Signatures}
+
+A digital signature $\sigma$ resembles a physical signature which proves the authenticity of messages on the web \cite{pfleeger2002security}. When \emph{Alice} digitally signs the message $m$ using her private key $Sk$, anybody on the web can verify the signature using the corresponding public key $Pk$ to assure $m$ effectively belongs to \emph{Alice} as well as it has not been altered while being transferred. Digital signatures are part of the public key cryptography scheme --- signing a message is equal to encrypting it under the private key. Equations \ref{eq:DigitalSignature} and \ref{eq:DigitalSignatureVerification} represent creation and verification of digital signatures. 
+\begin{equation} \label{eq:DigitalSignature}
+\sigma=\Signk{sk}{m}
+\end{equation}
+\begin{equation} \label{eq:DigitalSignatureVerification}
+\mathtt{T/F}=\Verifyk{pk}{m,\sigma}
+ \end{equation}
+
+
+\subsection{Digital Hash Functions}
+
+A cryptographic hash function $\Hash{m}$ creates fixed size length outputs called \emph{hash values} for any arbitrary size inputs (\emph{pre-image})\cite{schneier2007applied}. These functions are used to verify whether a candidate pre-image is equal to the real pre-image value. A perfect cryptographic hash function is non-invertible, meaning that it is infeasible to generate a pre-image from its hash value, this property is referred to as the \emph{pre-image resistance}. Another property of an ideal hash function is called \emph{collision resistance}, that is, it should be infeasible to find two values x and y in such a way that $\Hash{x} = \Hash{y}$, and $x \neq y$.
+
+
+\section{Public Key Infrastructure (PKI)}
+
+As it is described in PKIX IETF Roadmap \cite{arsenault2002internet}, public key infrastructure (PKI) is ``the set of hardware, software, people, policies and procedures needed to create, manage, store, distribute, and revoke PKCs based on public-key cryptography''. The objective of PKI is to facilitate secure web communications by assuring a correct and proper binding between the identities and their corresponding cryptographic information \ie public keys. PKI establishes this binding through digitally signed documents called \emph{certificates} that are issued by \emph{certificate authorities (CAs)}.
+ 
+ 
+\subsection{Public Key Certificates}
+
+Public key certificate is a digitally signed document which validates the ownership of a public key. It contains information about the certificate holder \ie her name and her public key. It also contains the digital signature of a certificate authority (CA) that issues the certificate. CAs are the main components of the PKI scheme that are meant to be $authorities$: that is, they are authoritative over the namespace they bind keys to. While visiting a website that holds a certificate, one can easily verify the signature using the corresponding CA's public key. Successful verification of the signature proves that certificate holder is the real owner of the identity (\ie \texttt{example.com}) and the public key. This leads to establishment of a secure channel between client and server. 
+
+
+
+\section{TLS and HTTPS}
+
+The Transport Layer Security (TLS) is one of the leading cyprtographic protocols which is widely to secure communications \ie voice over-IP, email, virtual private networks (VPN) \etc over the Internet \cite{rescorla2001ssl}. In a TLS enabled communication, peers make contact and negotiate their highest cipher suite (ciphersuite negotiation). Then the server authenticate itself to the client (one-way authentication), the authentication method is selected based on the negotiated cipher suite. Eventually, they exchange cryptographic keys which they further use to encrypt communications. Thus, TLS prevent communications from being tampered, forged, and intercepted. The HTTPS is an HTTP protocol which uses SSL/TLS to provide confidentiality, message integrity, and server authentication within for web communications \cite{rescorla2000http}. Originally, HTTPS was only used to secure payment transactions on the web, however, today it is widely used to secure all types of web communications.
+
+
+\section{Blockchain}
+Blockchain technology is an incorruptible digital database which was first introduced as an underlying technology of cryptocurrency Bitcoin in Satoshi Nakamoto's (pseudonym) whitepaper in 2008 \cite{nakamoto2008bitcoin}. Bitcoin, an electronic payment system, is launched in order to solve the problem of centralization in current payment systems \ie banks, financial institutions \etc --- where a central authority is the only authoritative party who is in charge of processing the electronic payments. Placing too much trust on these third parties (TTP) introduces single point of failure --- if trusted third party becomes the target of the attackers’ abuse or deliberately acts maliciously the whole system falls apart. 
+Being a tamper-proof ledger, blockchain maintains the transactions that are entered in a specific network. The ledger is possessed by each member of any specific peer-to-peer network and no centralized version of the information exists. every time a participant (node) creates a transaction on a blockchain it should be first verified by all other nodes in the network using a consensus algorithm such as Bitcoin’s \emph{proof-of-work (POW)}. Bitcoin’s proof-of-work-based consensus mechanism is used to attain the desired fault tolerance in a decentralized network \cite{lamport1982byzantine,lamport1998part}. In this process, known as \emph{mining}, a group of high computationally power network nodes, known as \emph{miners}, try solve a difficult mathematical puzzle, first node who solves the puzzle is then able to add its proposed block to the blockchain and receive the mining reward \cite{jakobsson1999proofs}. 
+
+\subsection{Ethereum}
+The blockchain technology has primitively gained a wide deployment in area of transactions of digital currencies \eg Bitcoin cryptocurrency. However, in 2014, Vitalik Buterin represented a new blockchain based application known as Ethereum in his article "Ethereum: A Next-Generation Cryptocurrency and Decentralized Application Platform" \cite{buterin2014next}. As a blockchain-based distributed public network, Ethereum implements a decentralized virtual machine, known as Ethereum Virtual Machine (EVM), which allows network nodes to execute and deploy programmable smart contracts to the Ethereum blockchain \cite{wood2014ethereum}. This new platform enables developers to create and execute blockchain applications called \emph{decentralized applications (dapps)} in a more efficient way. 
+
+Decentralized applications are completely open-source and their data is stored in a decentralized manner on the blockchain network. Dapps are created by smart contracts, self-executing contracts that are written in a high level programming language called \emph{Solidity} which is similar to C and JavaScript \cite{Ethereum41:online}. Digital smart contracts were first described by Nick Szabo in 1993 \cite{szabo1997formalizing}, however, it reached a high level of adoption by blockchain technology. 
+
+
+\section{Conclusion}
+So far this chapter has focused on some of the basic concepts in cryptography. We then gave a brief overview of the blockchain technology and the Ethereum blockchain. In the next chapter, we will represent our thorough empirical study of web certificate model. We will then illustrate and discuss the results that were found during our investigations.
+
+
+
+
+
+
+
+
+
